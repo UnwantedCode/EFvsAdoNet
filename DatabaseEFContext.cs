@@ -15,7 +15,6 @@ namespace EFvsAdoNet
         }
 
         public DbSet<Pracownik> Pracownicy { get; set; }
-        public DbSet<Dzial> Dzialy { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

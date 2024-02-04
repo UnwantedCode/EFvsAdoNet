@@ -31,47 +31,26 @@ namespace EFvsAdoNet
                 try
                 {
                     
-                    command = new SqlCommand("DELETE FROM Pracowniks; DELETE FROM Dzials;", connection, transaction);
+                    command = new SqlCommand("DELETE FROM Pracowniks;", connection, transaction);
                     command.ExecuteNonQuery();
-                    command = new SqlCommand(" DBCC CHECKIDENT ('Pracowniks', RESEED, 0);DBCC CHECKIDENT ('Dzials', RESEED, 0);", connection, transaction);
-                    command.ExecuteNonQuery();
-
-                    
-                    StringBuilder departmentsQuery = new StringBuilder();
-                    departmentsQuery.Append("INSERT INTO Dzials (Nazwa) VALUES ");
-                    for (int i = 1; i <= numberOfDepartments; i++)
-                    {
-                        departmentsQuery.Append($"('Dział {i}'){(i < numberOfDepartments ? "," : ";")}");
-                    }
-                    command = new SqlCommand(departmentsQuery.ToString(), connection, transaction);
+                    command = new SqlCommand(" DBCC CHECKIDENT ('Pracowniks', RESEED, 0);", connection, transaction);
                     command.ExecuteNonQuery();
 
                     
-                    List<int> departmentIds = new List<int>();
-                    command = new SqlCommand("SELECT DzialId FROM Dzials", connection, transaction);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            departmentIds.Add(reader.GetInt32(0));
-                        }
-                    }
-
-                    
+                   
                     var rand = new Random();
                     for (int i = 0; i < numberOfEmployees; i += 1000)
                     {
                         StringBuilder employeesQuery = new StringBuilder();
-                        employeesQuery.Append("INSERT INTO Pracowniks (Imie, Nazwisko, Stanowisko, DzialId) VALUES ");
+                        employeesQuery.Append("INSERT INTO Pracowniks (Imie, Nazwisko, Stanowisko) VALUES ");
 
                         for (int j = 0; j < 1000 && (i + j) < numberOfEmployees; j++)
                         {
                             string imie = new Faker().Name.FirstName().Replace("'", "''");
                             string nazwisko = new Faker().Name.LastName().Replace("'", "''");
                             string stanowisko = new Faker().Name.JobTitle().Replace("'", "''");
-                            int dzialId = departmentIds[rand.Next(departmentIds.Count)];  
 
-                            employeesQuery.Append($"('{imie}', '{nazwisko}', '{stanowisko}', {dzialId}){(j < 999 && (i + j) < numberOfEmployees - 1 ? "," : ";")}");
+                            employeesQuery.Append($"('{imie}', '{nazwisko}', '{stanowisko}'){(j < 999 && (i + j) < numberOfEmployees - 1 ? "," : ";")}");
                         }
 
                         command = new SqlCommand(employeesQuery.ToString(), connection, transaction);
@@ -92,21 +71,12 @@ namespace EFvsAdoNet
         {
             var context = new DatabaseEFContext();
 
-            
-            var departmentIds = context.Dzialy.Select(d => d.DzialId).ToList();
-
-            
-            if (!departmentIds.Any())
-            {
-                throw new InvalidOperationException("Brak działów w bazie danych.");
-            }
 
             
             var employeeGenerator = new Faker<Pracownik>()
                 .RuleFor(u => u.Imie, f => f.Name.FirstName())
                 .RuleFor(u => u.Nazwisko, f => f.Name.LastName())
-                .RuleFor(u => u.Stanowisko, f => f.Name.JobTitle())
-                .RuleFor(u => u.DzialId, f => f.PickRandom(departmentIds));
+                .RuleFor(u => u.Stanowisko, f => f.Name.JobTitle());
 
             
             Stopwatch stopwatch = Stopwatch.StartNew(); 
@@ -133,36 +103,16 @@ namespace EFvsAdoNet
 
                 try
                 {
-                    
-                    List<int> departmentIds = new List<int>();
-                    string selectDepartmentsQuery = "SELECT DzialId FROM Dzials";
-                    command = new SqlCommand(selectDepartmentsQuery, connection, transaction);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            departmentIds.Add(reader.GetInt32(0));
-                        }
-                    }
-
-                    
-                    if (departmentIds.Count == 0)
-                    {
-                        throw new Exception("Brak działów w bazie danych.");
-                    }
-
-                    
                     var employeeGenerator = new Faker<Pracownik>()
                         .RuleFor(u => u.Imie, f => f.Name.FirstName())
                         .RuleFor(u => u.Nazwisko, f => f.Name.LastName())
-                        .RuleFor(u => u.Stanowisko, f => f.Name.JobTitle())
-                        .RuleFor(u => u.DzialId, f => f.PickRandom(departmentIds)); 
+                        .RuleFor(u => u.Stanowisko, f => f.Name.JobTitle()); 
 
                     
                     for (int i = 0; i < numberOfEmployees; i += 1000)
                     {
                         StringBuilder employeesQuery = new StringBuilder();
-                        employeesQuery.Append("INSERT INTO Pracowniks (Imie, Nazwisko, Stanowisko, DzialId) VALUES ");
+                        employeesQuery.Append("INSERT INTO Pracowniks (Imie, Nazwisko, Stanowisko) VALUES ");
 
                         for (int j = 0; j < 1000 && (i + j) < numberOfEmployees; j++)
                         {
@@ -171,7 +121,7 @@ namespace EFvsAdoNet
                             string nazwisko = employee.Nazwisko.Replace("'", "''");
                             string stanowisko = employee.Stanowisko.Replace("'", "''");
 
-                            employeesQuery.Append($"('{imie}', '{nazwisko}', '{stanowisko}', {employee.DzialId}){(j < 999 && (i + j) < numberOfEmployees - 1 ? "," : ";")}");
+                            employeesQuery.Append($"('{imie}', '{nazwisko}', '{stanowisko}'){(j < 999 && (i + j) < numberOfEmployees - 1 ? "," : ";")}");
                         }
 
                         command = new SqlCommand(employeesQuery.ToString(), connection, transaction);

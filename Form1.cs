@@ -30,9 +30,6 @@ namespace EFvsAdoNet
                 stopwatch.Stop(); 
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = pracownicy;
-                dataGridView1.Columns["Dzial"].Visible = false; 
-
-
             }
             labelOutput.Text = $"Pobieranie EF: {stopwatch.ElapsedMilliseconds} ms";
 
