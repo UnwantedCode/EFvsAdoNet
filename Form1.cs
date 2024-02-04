@@ -34,7 +34,7 @@ namespace EFvsAdoNet
 
 
             }
-            labelOutput.Text = $"Dodawanie EF: {stopwatch.ElapsedMilliseconds} ms";
+            labelOutput.Text = $"Pobieranie EF: {stopwatch.ElapsedMilliseconds} ms";
 
         }
 
@@ -55,7 +55,7 @@ namespace EFvsAdoNet
             }
 
             dataGridView1.DataSource = dataTable;
-            labelOutput.Text = $"Dodawanie EF: {stopwatch.ElapsedMilliseconds} ms";
+            labelOutput.Text = $"Pobieranie ADO.NET: {stopwatch.ElapsedMilliseconds} ms";
 
         }
 
