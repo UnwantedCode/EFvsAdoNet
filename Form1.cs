@@ -23,14 +23,14 @@ namespace EFvsAdoNet
             Stopwatch stopwatch = new Stopwatch();
             using (var context = new DatabaseEFContext())
             {
-                // fill dataTable with pracownicy without converting to list
-                stopwatch = Stopwatch.StartNew(); // Rozpoczêcie pomiaru czasu
-                                                                        // Rozpoczêcie pomiaru czasu
+                
+                stopwatch = Stopwatch.StartNew(); 
+                                                                        
                 var pracownicy = context.Pracownicy.ToList();
-                stopwatch.Stop(); // Zatrzymanie pomiaru czasu
+                stopwatch.Stop(); 
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = pracownicy;
-                dataGridView1.Columns["Dzial"].Visible = false; // Ukrywa kolumnê 'Dzial'
+                dataGridView1.Columns["Dzial"].Visible = false; 
 
 
             }
@@ -47,11 +47,11 @@ namespace EFvsAdoNet
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                stopwatch = Stopwatch.StartNew(); // Rozpoczêcie pomiaru czasu
+                stopwatch = Stopwatch.StartNew(); 
                 SqlCommand command = new SqlCommand(query, connection);
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dataTable); // Wype³nia DataTable danymi z bazy danych
+                adapter.Fill(dataTable); 
             }
 
             dataGridView1.DataSource = dataTable;
@@ -77,7 +77,7 @@ namespace EFvsAdoNet
 
         private void btnDeleteEF_Click(object sender, EventArgs e)
         {
-            // CREATE DELETE METHOD FOR EF TO DELETE EMPLOYEES. DELETE FIRST EMPLOYEES. VALUES GET FROM NumericUpDown
+            
             PopulateDB EF = new PopulateDB();
             Stopwatch stopwatch = EF.DeleteEF((int)numberInput.Value);
             labelOutput.Text = $"Usuwanie EF: {stopwatch.ElapsedMilliseconds} ms";
@@ -85,7 +85,7 @@ namespace EFvsAdoNet
 
         private void btnDeleteAdo_Click(object sender, EventArgs e)
         {
-            // CREATE DELETE METHOD FOR ADO TO DELETE EMPLOYEES. DELETE FIRST EMPLOYEES. VALUES GET FROM NumericUpDown 
+            
             PopulateDB EF = new PopulateDB();
             Stopwatch stopwatch = EF.DeleteADO((int)numberInput.Value);
             labelOutput.Text = $"Usuwanie ADO.NET: {stopwatch.ElapsedMilliseconds} ms";
@@ -93,7 +93,7 @@ namespace EFvsAdoNet
 
         private void btnUpdateEF_Click(object sender, EventArgs e)
         {
-            // CREATE UPDATE METHOD FOR EF TO UPDATE EMPLOYEES. UPDATE FIRST EMPLOYEES. VALUES GET FROM NumericUpDown
+            
             PopulateDB EF = new PopulateDB();
             Stopwatch stopwatch = EF.UpdateEF((int)numberInput.Value);
             labelOutput.Text = $"Aktualizacja EF: {stopwatch.ElapsedMilliseconds} ms";
@@ -102,7 +102,7 @@ namespace EFvsAdoNet
 
         private void btnUpdateAdo_Click(object sender, EventArgs e)
         {
-            // CREATE UPDATE METHOD FOR ADO TO UPDATE EMPLOYEES. UPDATE FIRST EMPLOYEES. VALUES GET FROM NumericUpDown
+            
             PopulateDB EF = new PopulateDB();
             Stopwatch stopwatch = EF.UpdateADO((int)numberInput.Value);
             labelOutput.Text = $"Aktualizacja ADO.NET: {stopwatch.ElapsedMilliseconds} ms";
