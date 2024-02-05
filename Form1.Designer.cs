@@ -40,6 +40,7 @@
             btnDeleteAdo = new Button();
             btnReset = new Button();
             labelOutput = new Label();
+            btnSummaryExcel = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numberInput).BeginInit();
             SuspendLayout();
@@ -51,12 +52,12 @@
             dataGridView1.Location = new Point(25, 21);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(906, 395);
+            dataGridView1.Size = new Size(461, 395);
             dataGridView1.TabIndex = 0;
             // 
             // pobierzEF
             // 
-            pobierzEF.Location = new Point(999, 49);
+            pobierzEF.Location = new Point(502, 40);
             pobierzEF.Name = "pobierzEF";
             pobierzEF.Size = new Size(118, 23);
             pobierzEF.TabIndex = 1;
@@ -66,7 +67,7 @@
             // 
             // pobierzAN
             // 
-            pobierzAN.Location = new Point(1242, 49);
+            pobierzAN.Location = new Point(745, 40);
             pobierzAN.Name = "pobierzAN";
             pobierzAN.Size = new Size(131, 23);
             pobierzAN.TabIndex = 2;
@@ -76,7 +77,7 @@
             // 
             // numberInput
             // 
-            numberInput.Location = new Point(999, 100);
+            numberInput.Location = new Point(502, 91);
             numberInput.Name = "numberInput";
             numberInput.Size = new Size(374, 23);
             numberInput.TabIndex = 3;
@@ -84,7 +85,7 @@
             // 
             // btnSaveAdo
             // 
-            btnSaveAdo.Location = new Point(1242, 181);
+            btnSaveAdo.Location = new Point(745, 172);
             btnSaveAdo.Name = "btnSaveAdo";
             btnSaveAdo.Size = new Size(131, 23);
             btnSaveAdo.TabIndex = 4;
@@ -94,7 +95,7 @@
             // 
             // btnSaveEF
             // 
-            btnSaveEF.Location = new Point(999, 181);
+            btnSaveEF.Location = new Point(502, 172);
             btnSaveEF.Name = "btnSaveEF";
             btnSaveEF.Size = new Size(118, 23);
             btnSaveEF.TabIndex = 5;
@@ -104,7 +105,7 @@
             // 
             // btnUpdateEF
             // 
-            btnUpdateEF.Location = new Point(999, 244);
+            btnUpdateEF.Location = new Point(502, 235);
             btnUpdateEF.Name = "btnUpdateEF";
             btnUpdateEF.Size = new Size(118, 23);
             btnUpdateEF.TabIndex = 6;
@@ -114,7 +115,7 @@
             // 
             // btnUpdateAdo
             // 
-            btnUpdateAdo.Location = new Point(1242, 244);
+            btnUpdateAdo.Location = new Point(745, 235);
             btnUpdateAdo.Name = "btnUpdateAdo";
             btnUpdateAdo.Size = new Size(131, 23);
             btnUpdateAdo.TabIndex = 7;
@@ -124,7 +125,7 @@
             // 
             // btnDeleteEF
             // 
-            btnDeleteEF.Location = new Point(999, 308);
+            btnDeleteEF.Location = new Point(502, 299);
             btnDeleteEF.Name = "btnDeleteEF";
             btnDeleteEF.Size = new Size(118, 23);
             btnDeleteEF.TabIndex = 8;
@@ -134,7 +135,7 @@
             // 
             // btnDeleteAdo
             // 
-            btnDeleteAdo.Location = new Point(1242, 308);
+            btnDeleteAdo.Location = new Point(745, 299);
             btnDeleteAdo.Name = "btnDeleteAdo";
             btnDeleteAdo.Size = new Size(131, 23);
             btnDeleteAdo.TabIndex = 9;
@@ -144,7 +145,7 @@
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(999, 387);
+            btnReset.Location = new Point(502, 378);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(374, 23);
             btnReset.TabIndex = 10;
@@ -155,16 +156,27 @@
             // labelOutput
             // 
             labelOutput.AutoSize = true;
-            labelOutput.Location = new Point(999, 356);
+            labelOutput.Location = new Point(502, 347);
             labelOutput.Name = "labelOutput";
             labelOutput.Size = new Size(0, 15);
             labelOutput.TabIndex = 11;
+            // 
+            // btnSummaryExcel
+            // 
+            btnSummaryExcel.Location = new Point(507, 413);
+            btnSummaryExcel.Name = "btnSummaryExcel";
+            btnSummaryExcel.Size = new Size(75, 23);
+            btnSummaryExcel.TabIndex = 12;
+            btnSummaryExcel.Text = "button1";
+            btnSummaryExcel.UseVisualStyleBackColor = true;
+            btnSummaryExcel.Click += btnSummaryExcel_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1415, 450);
+            ClientSize = new Size(899, 450);
+            Controls.Add(btnSummaryExcel);
             Controls.Add(labelOutput);
             Controls.Add(btnReset);
             Controls.Add(btnDeleteAdo);
@@ -178,7 +190,7 @@
             Controls.Add(pobierzEF);
             Controls.Add(dataGridView1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "EFvsAdoNet";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)numberInput).EndInit();
             ResumeLayout(false);
@@ -199,5 +211,6 @@
         private Button btnDeleteAdo;
         private Button btnReset;
         private Label labelOutput;
+        private Button btnSummaryExcel;
     }
 }

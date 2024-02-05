@@ -5,14 +5,14 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<EFvsAdoNet.DatabaseEFContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<global::EFvsAdoNet.DatabaseEFContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(EFvsAdoNet.DatabaseEFContext context)
+        protected override void Seed(global::EFvsAdoNet.DatabaseEFContext context)
         {
             //  This method will be called after migrating to the latest version.
 
