@@ -285,11 +285,8 @@ namespace EFvsAdoNet
 
             return (dataTable, stopwatch);
         }
-        public void CreateSummaryExcel()
+        public void CreateSummaryExcel(int numberOfEmployees, int numberIteration)
         {
-            // generate 1000 times for each method
-            int numberOfEmployees = 10;
-            int numberIteration = 10;
             // create list of stopwatches selected methods
             List<Stopwatch> stopwatchesSelectEF = new List<Stopwatch>();
             List<Stopwatch> stopwatchesSelectAN = new List<Stopwatch>();
@@ -303,12 +300,15 @@ namespace EFvsAdoNet
             for (int i = 0; i < numberIteration; i++)
             {
                 stopwatchesInsertEF.Add(PopulateEmployeesEF(numberOfEmployees));
-                stopwatchesInsertAN.Add(PopulateEmployeesADO(numberOfEmployees));
                 stopwatchesUpdateEF.Add(UpdateEF(numberOfEmployees));
-                stopwatchesUpdateAN.Add(UpdateADO(numberOfEmployees));
                 stopwatchesDeleteEF.Add(DeleteEF(numberOfEmployees));
-                stopwatchesDeleteAN.Add(DeleteADO(numberOfEmployees));
                 stopwatchesSelectEF.Add(SelectEF().Item2);
+            }
+            for (int i = 0; i < numberIteration; i++)
+            {
+                stopwatchesInsertAN.Add(PopulateEmployeesADO(numberOfEmployees));
+                stopwatchesUpdateAN.Add(UpdateADO(numberOfEmployees));
+                stopwatchesDeleteAN.Add(DeleteADO(numberOfEmployees));
                 stopwatchesSelectAN.Add(SelectADO().Item2);
             }
             // create excel file
@@ -318,30 +318,41 @@ namespace EFvsAdoNet
                 var worksheet = workbook.AddWorksheet("Performance Summary");
 
                 // Nagłówki kolumn
-                worksheet.Cell(1, 1).Value = "Operation";
-                worksheet.Cell(1, 2).Value = "Index";
-                worksheet.Cell(1, 3).Value = "Entity Framework (ms)";
-                worksheet.Cell(1, 4).Value = "ADO.NET (ms)";   
-                worksheet.Cell(1, 5).Value = "Entity Framework (ms)";
-                worksheet.Cell(1, 6).Value = "ADO.NET (ms)";
-                worksheet.Cell(1, 7).Value = "Entity Framework (ms)";
-                worksheet.Cell(1, 8).Value = "ADO.NET (ms)";
+                string[] operations = { "Wstawianie", "Aktualizacja", "Usuwanie", "Pobieranie" };
+                int column = 1;
+                foreach (var operation in operations)
+                {
+                    worksheet.Cell(1, column + 1).Value = operation;
+                    worksheet.Cell(2, column + 1).Value = "Entity Framework (ms)";
+                    worksheet.Cell(2, column + 2).Value = "ADO.NET (ms)";
+                    column += 2; // Przesuwamy kolumny o 2 dla każdej operacji
+                }
 
-                // Zapisywanie czasów
-                int row = 2; // Początek danych
                 for (int i = 0; i < numberIteration; i++)
                 {
-                    worksheet.Cell(row + i, 1).Value = "Insert";
-                    worksheet.Cell(row + i, 2).Value = i + 1; // Indeks pomiaru
-                    worksheet.Cell(row + i, 3).Value = stopwatchesInsertEF[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 4).Value = stopwatchesInsertAN[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 5).Value = stopwatchesUpdateEF[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 6).Value = stopwatchesUpdateAN[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 7).Value = stopwatchesDeleteEF[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 8).Value = stopwatchesDeleteAN[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 9).Value = stopwatchesSelectEF[i].ElapsedMilliseconds;
-                    worksheet.Cell(row + i, 10).Value = stopwatchesSelectAN[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 1).Value = i + 1; // Indeks pomiaru
+                    worksheet.Cell(i + 3, 2).Value = stopwatchesInsertEF[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 3).Value = stopwatchesInsertAN[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 4).Value = stopwatchesUpdateEF[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 5).Value = stopwatchesUpdateAN[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 6).Value = stopwatchesDeleteEF[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 7).Value = stopwatchesDeleteAN[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 8).Value = stopwatchesSelectEF[i].ElapsedMilliseconds;
+                    worksheet.Cell(i + 3, 9).Value = stopwatchesSelectAN[i].ElapsedMilliseconds;
                 }
+                // Dodanie nagłówków dla średnich czasów
+                int lastDataRow = numberIteration + 3;
+                worksheet.Cell(lastDataRow, 1).Value = "Średnia (bez pierwszej wartości)";
+
+                // Obliczenie i wpisanie średnich czasów
+                worksheet.Cell(lastDataRow, 2).Value = stopwatchesInsertEF.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 3).Value = stopwatchesInsertAN.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 4).Value = stopwatchesUpdateEF.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 5).Value = stopwatchesUpdateAN.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 6).Value = stopwatchesDeleteEF.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 7).Value = stopwatchesDeleteAN.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 8).Value = stopwatchesSelectEF.Skip(1).Average(sw => sw.ElapsedMilliseconds);
+                worksheet.Cell(lastDataRow, 9).Value = stopwatchesSelectAN.Skip(1).Average(sw => sw.ElapsedMilliseconds);
 
                 // Tutaj dodaj dane dla Update, Delete itp. w podobny sposób, pamiętając o aktualizacji wartości `row`
 
@@ -349,7 +360,9 @@ namespace EFvsAdoNet
                 worksheet.Columns().AdjustToContents();
 
                 // Zapis do pliku
-                workbook.SaveAs("PerformanceSummary.xlsx");
+                workbook.SaveAs($"PerformanceSummary_{numberOfEmployees}_{numberIteration}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx"); 
+
+                // add date time to file name
             }
         }
 

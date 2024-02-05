@@ -100,7 +100,7 @@ namespace EFvsAdoNet
             // create summary time excel with update, delete, insert and select
             // get 1000 with all times
             PopulateDB EF = new PopulateDB();
-            EF.CreateSummaryExcel();
+            EF.CreateSummaryExcel(10,10);
         }
     }
 }
